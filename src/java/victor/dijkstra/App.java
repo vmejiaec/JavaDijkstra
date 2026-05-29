@@ -11,6 +11,12 @@ public class App{
         grafo.addNodo("A","C", 9);
         grafo.addNodo("A","D", 14);
         grafo.addNodo("B","D", 10);
+        grafo.addNodo("B", "E", 15);
+        grafo.addNodo("C", "D", 2);
+        grafo.addNodo("C", "F", 11);
+        grafo.addNodo("D", "E", 6);
+        grafo.addNodo("D", "F", 9);
+        grafo.addNodo("E", "F", 4);
 
         System.out.println("Vecinos: "+ grafo.vecinos);
 

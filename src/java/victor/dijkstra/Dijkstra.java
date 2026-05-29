@@ -13,11 +13,23 @@ public class Dijkstra{
         // A la primera fila poner distancia 0
         tablaEstado.get(nodoInicio).distancia = 0;
 
+        for (String nodo: tablaEstado.keySet()){
+            System.out.println("nodo: "+ nodo +" "+ tablaEstado.get(nodo).distancia + " "+ tablaEstado.get(nodo).visitado );
+        }
+
         // Se prepara el mapa de resultados
         Map <String, String> previo = new LinkedHashMap<>();
 
         while (true){
-            // procesar
+            // buscar el nodo no visitado con la menor distancia
+            String nodoActual = null;
+            int menor = 100 +1;
+            for (FilaEstado fila : tablaEstado.values()){
+                if (!fila.visitado && fila.distancia < menor){
+                    menor = estado.distancia;
+                    nodoActual = fila.nodo;
+                }
+            }
             break;
         }
 
