@@ -26,11 +26,45 @@ public class Dijkstra{
             int menor = 100 +1;
             for (FilaEstado fila : tablaEstado.values()){
                 if (!fila.visitado && fila.distancia < menor){
-                    menor = estado.distancia;
+                    menor = fila.distancia;
                     nodoActual = fila.nodo;
                 }
             }
-            break;
+            // Si no se encontró ninguno, ya no quedan mejoras por hacer.
+            if(nodoActual == null){
+                break;
+            }
+
+            // En la fila del nodo actual, se marca como visitado.
+            FilaEstado filaActual = tablaEstado.get(nodoActual);
+            filaActual.visitado = true;
+
+            // Relajar las aristas vecinas.
+            for(Map.Entry<String, Integer> vecino : grafo.vecinos.get(nodoActual).entrySet()){
+                String nodoVecino = vecino.getKey();
+                int peso = vecino.getValue();
+                FilaEstado filaVecina = tablaEstado.get(nodoVecino);
+
+                if(filaVecina.visitado){
+                    continue;
+                }
+
+                // Si el nodo actual sigue en 100, todavía no se alcanzó desde el nodo de inicio.
+                if(filaActual.distancia >= 100){
+                    continue;
+                }
+
+                int nuevaDistancia = filaActual.distancia + peso;
+                if(nuevaDistancia < filaVecina.distancia){
+                    filaVecina.distancia = nuevaDistancia;
+                    previo.put(nodoVecino, nodoActual);
+                }
+            }
+
+            // Si ya llegamos al nodo final, podemos salir.
+            if(nodoActual.equals(nodoFin)){
+                break;
+            }
         }
 
         return previo;
