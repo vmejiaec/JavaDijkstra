@@ -90,3 +90,80 @@ Estado 5	Nodo	d	visitado	camino
 	E	17	Si	A,C - C,D - D,E			
 					E,F	4	21
 	F	20	No	A,C - C,F			
+
+
+
+package victor.dijkstra;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+// Clase que contiene la lógica del algoritmo de Dijkstra.
+public class Dijkstra{
+
+    public Map<String, String> ejecutar(Grafo grafo, String nodoInicio, String nodoFin){
+
+        // Crear la tabla Estado.
+        // tablaEstado guarda una fila por nodo con su mejor distancia conocida.
+        Map<String, FilaEstado> tablaEstado = new LinkedHashMap<>();
+        for(String nodo : grafo.vecinos.keySet()){
+            tablaEstado.put(nodo, new FilaEstado(nodo));
+        }
+
+        // El nodo de inicio siempre comienza en 0.
+        tablaEstado.get(nodoInicio).distancia = 0;
+
+        // El mapa previo recuerda desde qué nodo se llegó al mejor valor.
+        Map<String, String> previo = new LinkedHashMap<>();
+
+        while(true){
+            // Busca el nodo no visitado con la menor distancia.
+            String actual = null;
+            int menor = 100 + 1;
+            for(FilaEstado estado : tablaEstado.values()){
+                if(!estado.visitado && estado.distancia < menor){
+                    menor = estado.distancia;
+                    actual = estado.nodo;
+                }
+            }
+
+            // Si no se encontró ninguno, ya no quedan mejoras por hacer.
+            if(actual == null){
+                break;
+            }
+
+            // En la fila del nodo actual, se marca como visitado.
+            FilaEstado filaActual = tablaEstado.get(actual);
+            filaActual.visitado = true;
+
+            // Relajar las aristas vecinas.
+            for(Map.Entry<String, Integer> vecino : grafo.vecinos.get(actual).entrySet()){
+                String nodoVecino = vecino.getKey();
+                int peso = vecino.getValue();
+                FilaEstado filaVecina = tablaEstado.get(nodoVecino);
+
+                if(filaVecina.visitado){
+                    continue;
+                }
+
+                // Si el nodo actual sigue en 100, todavía no se alcanzó desde el nodo de inicio.
+                if(filaActual.distancia >= 100){
+                    continue;
+                }
+
+                int nuevaDistancia = filaActual.distancia + peso;
+                if(nuevaDistancia < filaVecina.distancia){
+                    filaVecina.distancia = nuevaDistancia;
+                    previo.put(nodoVecino, actual);
+                }
+            }
+
+            // Si ya llegamos al nodo final, podemos salir.
+            if(actual.equals(nodoFin)){
+                break;
+            }
+        }
+
+        return previo;
+    }
+}
